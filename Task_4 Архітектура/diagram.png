@@ -1,0 +1,12 @@
+digraph "Діаграма_реєстрації" {
+	graph [fontcolor="#2D3436" fontname="Sans-Serif" fontsize=15 label="Діаграма_реєстрації" nodesep=0.60 pad=2.0 rankdir=LR ranksep=0.75 splines=ortho]
+	node [fixedsize=true fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13 height=1.4 imagescale=true labelloc=b shape=box style=rounded width=1.4]
+	edge [color="#7B8894"]
+	bbad80ae4577422a939ef95d92fa7873 [label="Незареєстрований користувач" height=1.9 image="C:\Users\Lenovo\AppData\Local\Programs\Python\Python312\Lib\site-packages\resources/programming/language\python.png" shape=none]
+	"66ad7fcad9b6431a8f244fac2cab1b0e" [label="Система реєстрації" height=1.9 image="C:\Users\Lenovo\AppData\Local\Programs\Python\Python312\Lib\site-packages\resources/onprem/compute\server.png" shape=none]
+	"96eaeea3db9b401899bedc1decd85575" [label="База даних" height=1.9 image="C:\Users\Lenovo\AppData\Local\Programs\Python\Python312\Lib\site-packages\resources/onprem/database\postgresql.png" shape=none]
+	bbad80ae4577422a939ef95d92fa7873 -> "66ad7fcad9b6431a8f244fac2cab1b0e" [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	"66ad7fcad9b6431a8f244fac2cab1b0e" -> "96eaeea3db9b401899bedc1decd85575" [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	"96eaeea3db9b401899bedc1decd85575" -> "66ad7fcad9b6431a8f244fac2cab1b0e" [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	"66ad7fcad9b6431a8f244fac2cab1b0e" -> bbad80ae4577422a939ef95d92fa7873 [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+}

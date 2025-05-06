@@ -1,0 +1,61 @@
+@startuml
+skinparam componentStyle rectangle
+skinparam cloudBackgroundColor #F0F8FF
+skinparam rectangleBackgroundColor #FFFFFF
+skinparam ArrowColor Black
+
+title 🛡 Resilient Architecture – "Математика: повторення"
+
+actor "Користувач\n(Веб / Telegram)" as User
+cloud "CloudFront / S3\n(React Frontend)" as Frontend
+
+rectangle "Мікросервіси (.NET)" {
+  component "Users API\n(Auth, Roles, MFA)" as Users
+  component "Tests API\n(тести, кешування,\n Circuit Breaker → Redis)" as Tests
+  component "GeneralData API\n(теорія, теми)" as GeneralData
+  component "Notation API\n(нотатки)" as Notation
+  component "WorkTime API\n(активність, async)" as WorkTime
+}
+
+cloud "Redis Cache\nElasticache\n(Circuit Breaker, SLA 99.9%)" as Redis
+database "PostgreSQL\n(RDS/Azure SQL)\nRetry + Timeout policy" as PostgreSQL
+queue "SQS Queue\n(Asynchronous Messaging)" as Queue
+component "Telegram Bot Service\n(Retry + Circuit Breaker)" as TelegramBot
+cloud "Telegram API\n(External dependency)" as TelegramAPI
+cloud "CloudWatch / AppInsights\n(Logs, Alerts, Metrics)" as Monitoring
+
+' --- Зв'язки користувача ---
+User --> Frontend : HTTPS
+
+' --- Frontend → Backend ---
+Frontend --> Users
+Frontend --> Tests
+Frontend --> GeneralData
+Frontend --> Notation
+Frontend --> WorkTime
+
+' --- Backend↔️ DB/Cache ---
+Users --> PostgreSQL
+Tests --> Redis : Read-Through\n+ TTL
+Tests --> PostgreSQL
+GeneralData --> PostgreSQL
+Notation --> PostgreSQL
+WorkTime --> PostgreSQL
+
+' --- Queue-патерн ---
+Tests --> Queue : Async Results
+WorkTime --> Queue : Async Update
+
+Queue --> TelegramBot : Consumes Events
+
+' --- Telegram ---
+TelegramBot --> TelegramAPI : Retry + Circuit Breaker
+TelegramBot --> Redis : Optional cache
+TelegramBot --> PostgreSQL : Progress Sync
+
+' --- Моніторинг ---
+Users --> Monitoring
+Tests --> Monitoring
+TelegramBot --> Monitoring
+Queue --> Monitoring
+@enduml
